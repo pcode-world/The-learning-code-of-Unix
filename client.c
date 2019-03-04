@@ -1,3 +1,7 @@
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <stdlib.h>
+#include <unistd.h>
 #include <sys/types.h>
 #include<netinet/in.h>
 #include <sys/socket.h>
@@ -31,7 +35,7 @@ void sig_usr(int signum)
 
 float get_parameter()
 {
-	char path1[50]= "/wujinlong/bus/w1/devices/";/* get DS18B20 path: /sys/bus/w1/devices/28-xxxx/w1_slave */
+	char path1[50]= "/sys/bus/w1/devices/";/* get DS18B20 path: /sys/bus/w1/devices/28-xxxx/w1_slave */
 	char path2[10]="/w1_slave";
 	char buff[256];
 	DIR *dirp;
@@ -73,7 +77,6 @@ float get_parameter()
 	
 	ptr=strstr(buff,"t=");
 	ptr+=2;
-	printf("the ptr-> is %c\n",*ptr);
 	wendu=atof(ptr)/1000;
 	printf("the temprature is :%f\n",wendu);
 /*	memset(buff,0,sizeof(buff));
