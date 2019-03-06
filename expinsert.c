@@ -1,13 +1,14 @@
+#include <unistd.h>
 #include <stdio.h>
 #include <sqlite3.h>
-
+#include <stdlib.h>
 int main(int argc, char* argv[])
 {
    sqlite3 *db;
    char *zErrMsg = 0;
    int rc;
-
-   rc = sqlite3_open("test.db", &db);
+   char * sql;
+   rc = sqlite3_open("wujinlong.db", &db);
 
    if( rc ){
       fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
@@ -34,8 +35,8 @@ int main(int argc, char* argv[])
    {
       fprintf(stdout, "Table created successfully\n");
    }
-  sql = "INSERT INTO COMPANY (DEVICE,TIME,TEMPRATURE) "  
-         "VALUES ('RPIWUJINLONG','2019/3/5 21-48-48',8.2); " ;
+  sql = "INSERT INTO RPI_temdata (DEVICE,TIME,TEMPRATURE) "  
+         "VALUES ('RPIWUJINLONG','2019/3/5 21-48-48'/8.2); " ;
 	/*
          "INSERT INTO COMPANY (ID,NAME,AGE,ADDRESS,SALARY) "  
          "VALUES (2, 'Allen', 25, 'Texas', 15000.00 ); "     
@@ -53,3 +54,4 @@ int main(int argc, char* argv[])
    }else{
       fprintf(stdout, "Records created successfully\n");
    }
+}
