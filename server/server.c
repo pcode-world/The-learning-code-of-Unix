@@ -175,12 +175,11 @@ int main(int argc,char *argv[])
         }
 
         signal(SIGUSR2, sig_usr);
-
         int listen_fd;
         struct sockaddr_in serveraddr;
         serveraddr.sin_family=AF_INET;//协议族
         serveraddr.sin_port=htons(LISTENPORT);  //端口绑定
-        serveraddr.sin_addr.s_addr=inet_addr(INADDR_ANY);
+        serveraddr.sin_addr.s_addr=INADDR_ANY;
         bzero(&(serveraddr.sin_zero), 8);
         listen_fd = socket(AF_INET,SOCK_STREAM,0);
 
@@ -201,11 +200,11 @@ int main(int argc,char *argv[])
 		printf("listen failure:%s",strerror(errno));
 		return -3;
 	}
-	
 	int new_fd;
 	struct sockaddr_in client_addr;
 	socklen_t addrlen;
-	while(g_cilentstop)
+	printf("succeed 1!\n");
+	while(!g_cilentstop)
 	{
 		printf("Waitting for client connection...\n");
 		new_fd=accept(listen_fd,(struct sockaddr *)&client_addr,&addrlen);
@@ -215,12 +214,13 @@ int main(int argc,char *argv[])
 			printf("accept a new client failure;%s",strerror(errno));
 			return -4;
 		}
-		printf("accept a new cilent:fd[%d]ip:%s port[%d]\n",new_fd,inet_ntoa(client_addr.sin_addr),ntohs(client_addr.sin_port));
+		printf("accept a new cilent:fd[%d]\n",new_fd);
+				//new_fd,inet_ntoa(client_addr.sin_addr),ntohs(client_addr.sin_port));
 
 		pthread_attr_t attr;
 		pthread_t tid;
 		pthread_set(&attr);
-		pthread_create(&tid,&attr,datadell,(void *)new_fd);
+		pthread_create(&tid,&attr,datadell,(void *)&new_fd);
 		/*
 		   
 		 int ped_create(
