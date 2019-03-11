@@ -15,8 +15,6 @@
 #include <string.h>
 #define BACKLOG 13
 
-//typedef void *(pthread_fun)(void *arg);
-
 struct _ctr_pthread{
     int arg_fd;
     int p_over;
@@ -110,10 +108,6 @@ void *datadell(void *arg)
 	}   
     snprintf(buf,sizeof(buf),"INSERT INTO RPI_temdata (DEVICE,TIME,TEMPRATURE) VALUES('%s','%s',%f);",p_device,p_time,atof(p_tem));
     sql = buf;
-	/*  
-         "INSERT INTO COMPANY (ID,NAME,AGE,ADDRESS,SALARY)" 
-         "VALUES (4, 'Mark', 25, 'Rich-Mond ', 65000.00 );";
-	 */
 
 	/* Execute SQL statement */
 
@@ -129,7 +123,7 @@ void *datadell(void *arg)
 		fprintf(stdout, "Records created successfully\n");
 	}	
 	sqlite3_close(db);
-	//close(p_temp->arg_fd);
+	close(p_temp->arg_fd);
     p_temp->p_over=1;
     printf("pthread exit now ...\n");
 	pthread_exit(NULL);//一般用于线程内部退出
@@ -258,21 +252,11 @@ int main(int argc,char *argv[])
 		printf("accept a new cilent:fd[%d]\n",new_fd);
 				//new_fd,inet_ntoa(client_addr.sin_addr),ntohs(client_addr.sin_port));
 
-		/*pthread_attr_t attr;
-		pthread_t tid;
-		pthread_set(&attr);
-        p_arg->arg_fd=new_fd;
-        p_arg->p_over=0;
-        */
        if (pthread_start(new_fd) < 0)
        {
            printf("a pthread start failure!\n");
        }
        continue;
-		/*if(pthread_create(&tid,&attr,datadell,(void *)p_arg) < 0)
-        {
-            printf("creat a pthread failure:%s\n",strerror(errno));
-        }*/
 
 		/*
 		   
@@ -283,11 +267,6 @@ int main(int argc,char *argv[])
                  void *restrict_arg //默认为NULL。若上述函数需要参数，将参数放入结构中并将地址作为arg传入。
                   );
 		 */
-          /* while(!(p_arg->p_over))
-           {
-               sleep(1);
-               printf("wait pthread exit...\n");
-           }*/
 	}
     close(listen_fd);
     return 0;
