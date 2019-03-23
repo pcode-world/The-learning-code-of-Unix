@@ -27,7 +27,7 @@ void printfhelp(void)
 
 void sig_usr(int signum)
 {
-	if(g_cilentstop == signum)
+	if(SIGUSR1 == signum)
 	{
 		g_cilentstop=1;
 	}
@@ -94,8 +94,8 @@ int main(int argc,char *argv[])
 
 {
 	int SLEEPTIME=30;
-	char * SERVER_IP;
-	int SERVERPORT;
+	char * SERVER_IP = NULL;
+	int SERVERPORT = -1;
 	float wendu;
     extern char *optarg;
     extern int optind, opterr, optopt;
@@ -124,6 +124,11 @@ int main(int argc,char *argv[])
 
                 }   
         }
+	if((SERVER_IP == NULL) || (SERVERPORT < 0))
+	{
+		printfhelp();
+		return 0;
+	}
 
 	signal(SIGUSR1, sig_usr);
 
@@ -145,6 +150,7 @@ int main(int argc,char *argv[])
         time(&timep);
         p=localtime(&timep); /*取得当地时间*/
         snprintf(dest_str,size,"RPIwujinlong/%d-%d-%d %d:%d:%d/%f\n",(1900+p->tm_year),(1+p->tm_mon),p->tm_mday,p->tm_hour,p->tm_min,p->tm_sec,wendu);
+	printf("dest_str:%s\n",dest_str);
         //int snprintf(char* dest_str,size_t size,const char* format,...);
         int client_socketfd;
         socklen_t addrlen;
@@ -190,7 +196,7 @@ closefd:
         {
             printf("Receive a signal,sleep over!\n");
         }
-	}
+    }
     
     printf("Receive exit signal,exit now\n");
 	return 0;
