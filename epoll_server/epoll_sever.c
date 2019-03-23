@@ -23,7 +23,7 @@
 int g_cilentstop=0;
 void sig_usr(int signum)
 {
-	if(g_cilentstop == signum)
+	if(SIGUSR2 == signum)
 	{
 		g_cilentstop=1;
 	}
@@ -32,10 +32,6 @@ void sig_usr(int signum)
 int main(int argc,char *argv[])
 
 {
-    if(daemon(0,0) < 0)
-    {
-        printf("program use daemon fafailure:%s\n",strerror(errno));
-    }
     extern char *optarg;
     extern int optind, opterr, optopt;
     int ret;
@@ -100,10 +96,10 @@ int main(int argc,char *argv[])
 	    return -3;
     }
 
-    if(daemon(0,0) < 0)
+    /*if(daemon(0,0) < 0)
     {   
 	    printf("program use daemon fafailure:%s\n",strerror(errno));
-    }
+    }*/
 
     if((epfd = epoll_create(MAXEVENT)) < 0) 
     {
