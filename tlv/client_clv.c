@@ -135,8 +135,8 @@ int main(int argc,char *argv[])
 		char time[30];
 		pack_tep(tep,sizeof(tep));
 		
-	        packtlv(buf,sizeof(buf),tep,5,TEMPRATURE);
-        	if(write(client_socketfd,buf,strlen(buf))<0)
+	       // packtlv(buf,sizeof(buf),tep,5,TEMPRATURE);
+        	if(write(client_socketfd,tep,strlen(tep))<0)
         	{
             		printf("write data to server failure:%s\n",strerror(errno));
 			goto closefd;
@@ -165,7 +165,7 @@ int packtlv(char *buf,int bufsize,char *data,int datalen,int packtype)
 	if((!buf) || (!data) || (bufsize < TLV_SIZE))
 	{
 		printf("the function packtlv_tem() with error parameters\n");
-		return;
+		return -1;
 	}
 
 	/***head***/
@@ -204,11 +204,11 @@ int packtlv(char *buf,int bufsize,char *data,int datalen,int packtype)
 int pack_tep(char *tep,int tepsize)
 {
 	if(tep ==NULL && tepsize < TLV_FIXED_SIZE+2+2)
-		return;
+		return -1;
 	float f_tep = get_tep();
 	unsigned short crc16 = 0;
 	int part_int = (int)f_tep;
-	int part_decm = (int)(f_tep-part_int)*100;
+	int part_decm = (int)(f_tep*100-part_int*100);
 	int offset = 0;
 	printf("f_tep = %f\n",f_tep);
         /***head***/
@@ -276,13 +276,13 @@ float get_tep()
 	if((fd=open(path1,O_RDONLY))<0)
 	{
 		printf("open failure:%s\n",strerror(errno));
-		return;
+		return -1;
 	}
 	memset(buff,0,sizeof(buff));
 	if((rv=read(fd,buff,sizeof(buff)))<0)
 	{
 		printf("read failure:%s\n",strerror(errno));
-		return;
+		return -1;
 	}
 	
 	ptr=strstr(buff,"t=");

@@ -35,6 +35,9 @@ enum{
 
 
 int g_cilentstop=0;
+static int reclag = 0;
+
+int unpacktlv(char *buf,int bufsize,int readret,int remain);
 void printfhelp(void)
 {
         printf("-p,assign port\n");
@@ -156,7 +159,7 @@ int main(int argc,char *argv[])
 				remain = unpacktlv(buf,sizeof(buf),rv,remain);
 				if(remain < 0)
 				{
-					return;
+					return -1;
 				}
 				printf("There are the contents of the buffer\n");
 				printf("**************************\n");
@@ -258,13 +261,20 @@ int unpacktlv(char *buf,int bufsize,int readret,int remain)
 				if(buf[current+1] == TEMPRATURE)
 				{
 					int i = 0;
+                    char tep[10];
+                    int p_tep = 0;
 					for(i;i<datalen;i++)
 					{
 						printf("0x%02x ",(unsigned char)buf[current]);
+                        tep[i] = buf[current];
 						current++;
 
 					}
 					printf("\n");
+                    int tep_int = tep[3];
+                    int tep_decm = tep[4];
+                    float tep_value = (tep_int*100+tep_decm)/100.0;
+                    printf("the tempratur is %f\n",tep_value);
 
 					memmove(buf,&buf[current],remain-current);
 					remain = remain-current;
@@ -276,14 +286,17 @@ int unpacktlv(char *buf,int bufsize,int readret,int remain)
 				{
 					printf("the tag not define\n");
 					int i = 0;
+                    char thread_arg[help-current];
 					for(i;i<datalen;i++)
 					{
 						printf("0x%02x ",(unsigned char)buf[current]);
+                        thread_arg[i] = buf[current];
 					}
 					printf("\n");
 					memmove(buf,&buf[current],remain-current);
 					remain = remain-current;
 					printf("remain = %d\n",remain);
+                    current = 0;
 					continue;
 				}
 				
@@ -306,7 +319,4 @@ int unpacktlv(char *buf,int bufsize,int readret,int remain)
 	remain = 0;
 	return remain;
 }
-
-
-
 
