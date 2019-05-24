@@ -1,3 +1,4 @@
+#include<stdlib.h>
 #include <stdio.h>
 #include <termios.h>
 #include <unistd.h>
@@ -8,7 +9,6 @@
 #include <strings.h>
 #include <string.h>
 #include "comport.h"
-
 int openComport(comport *p_comport,struct termios *term)
 {
 	int serial_fd = -1;
@@ -151,6 +151,7 @@ void set_stopbit(int stopb,struct termios *term)
 
 int setComport(comport *p_comport,struct termios *term)
 {
+    term->c_oflag &= ~OPOST;
 	set_stopbit(p_comport->stopb,term);
 	set_parity(p_comport->parityb,term);
 	set_data_bit(p_comport->datab,term);
@@ -162,6 +163,8 @@ int setComport(comport *p_comport,struct termios *term)
 		return -1;
 	}
     printf("set comport ok!\n");
+    printf("The details are printed below\n");
+    system("sudo sudo stty -F /dev/ttyUSB0 -a");
 
 }
 

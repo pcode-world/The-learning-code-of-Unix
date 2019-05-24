@@ -9,13 +9,13 @@ typedef struct _comport{
 }comport;
 
 
-int openComport(comport *p_comport,struct termios *term);
+extern int openComport(comport *p_comport,struct termios *term);
 
-int setComport(comport *p_comport,struct termios *term);
+extern int setComport(comport *p_comport,struct termios *term);
 
-int readComport(int fd,char *buff,int buffsize);
+extern int readComport(int fd,char *buff,int buffsize);
 
-int writeComport(int fd,char *buff,int buffsize);
+extern int writeComport(int fd,char *buff,int buffsize);
 
-int closeComport(int fd,struct termios *old_term);
+extern int closeComport(int fd,struct termios *old_term);
 
