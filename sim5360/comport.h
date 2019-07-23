@@ -40,4 +40,6 @@ int writeComport(int fd,char *buff,int buffsize);
 
 int setComport(comport *p_comport,struct termios *term);
 
+int readComport_notime(int fd,char *buff,int buffsize);
+
 #endif

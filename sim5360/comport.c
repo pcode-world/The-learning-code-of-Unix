@@ -15,7 +15,7 @@ comport *initComport()
     comport_info->baudrate =115200;
     comport_info->stopbit = 1;
     comport_info->isopen = 0;
-    comport_info->flowctl = 0;
+    comport_info->flowctl = 1;
     return comport_info;
 }
 
@@ -290,7 +290,7 @@ int readComport(int fd,char *buff,int buffsize)
     FD_ZERO(&rfds);
     FD_SET(fd,&rfds);
 
-    time.tv_sec = 15;
+    time.tv_sec = 30;
     time.tv_usec = 0;
 
 
@@ -300,7 +300,6 @@ int readComport(int fd,char *buff,int buffsize)
 		return -1;
     }
     
-    memset(buff,0,buffsize);
     
     if((ret = select(fd+1,&rfds,NULL,NULL,&time)) < 0)
     {
@@ -316,6 +315,8 @@ int readComport(int fd,char *buff,int buffsize)
 
     else 
 	{
+        memset(buff,0,buffsize);
+        
         if((rv = read(fd,buff,buffsize)) < 0)
         {
             printf("read failure:%s\n",strerror(errno));
@@ -368,4 +369,42 @@ int closeComport(comport *pcomport,struct termios *old_term)
 }
 
 
+int readComport_notime(int fd,char *buff,int buffsize)
+{
+    fd_set rfds;
+	int rv = -1;
+    int ret;
+    FD_ZERO(&rfds);
+    FD_SET(fd,&rfds);
+
+	if(buff == NULL)
+	{
+		printf("Cannot pass in null pointer\n");
+		return -1;
+    }
+    
+    memset(buff,0,buffsize);
+    
+    if((ret = select(fd+1,&rfds,NULL,NULL,NULL)) < 0)
+    {
+        printf("select failure:%s\n",strerror(errno));
+        return -1;
+    }
+
+    else if(ret == 0)
+    {
+        printf("select get time out\n");
+        return -1;
+    }
+
+    else 
+	{
+        if((rv = read(fd,buff,buffsize)) < 0)
+        {
+            printf("read failure:%s\n",strerror(errno));
+            return -1;
+        }
+	}
+	return rv;
+}
 	
