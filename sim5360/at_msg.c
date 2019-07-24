@@ -112,8 +112,16 @@ void AT_test(int comport_fd,char *AT_command,char *readbuff,int readbuffsize,int
             continue;
         }
 
+
 #if _DEBUG
         printf("command retbuff = %s,length = %d\n",readbuff,strlen(readbuff));
+            int f = strlen(readbuff);
+            for(f;f != 0;f--)
+            {
+                printf("%02x ",*(unsigned char *)readbuff);
+                readbuff++;
+            }
+            printf("\n");
 #endif
         break;
 
@@ -560,16 +568,34 @@ int wait_newmsg_txt(int comport_fd,int waittimes)
 }
 
 
-int read_unreadmsg_txt(int comport_fd)
+int list_msg_txt(int comport_fd,int type)
 {
     int arr_index[255];//创建一个与内存大小相当的数组用来存放未读短信的下标
     char AT_cmgf[] = "AT+CMGF=1\r\n";//txt模式
-    char AT_cmgl[] = "AT+CMGL=\"ALL\"\r\n";//列出未读短信
+    char AT_cmgl[32] = {0};//列出相关短信的命令数组
     char readbuff[1024];
     int loop_times = 0;
     char *pfind = NULL;
     int index = 0;
-   
+
+    switch(type)
+    {
+        case TYPE_REC_UNREAD:
+            strcpy(AT_cmgl,"AT+CMGL=\"REC UNREAD\"\r\n");
+            break;
+        case TYPE_REC_READ:
+            strcpy(AT_cmgl,"AT+CMGL=\"REC READ\"\r\n");
+            break;
+        case TYPE_STO_UNSENT:
+            strcpy(AT_cmgl,"AT+CMGL=\"STO UNSENT\"\r\n");
+            break; 
+        case TYPE_STO_SENT:
+            strcpy(AT_cmgl,"AT+CMGL=\"STO SENT\"\r\n");
+            break;
+        case TYPE_ALL:
+            strcpy(AT_cmgl,"AT+CMGL=\"ALL\"\r\n");
+            break;
+    }
     while(1)
     {
         memset(readbuff,0,sizeof(readbuff));

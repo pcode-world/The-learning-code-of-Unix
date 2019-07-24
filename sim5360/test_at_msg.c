@@ -18,7 +18,7 @@
 int main(void)
 {
     char rec_nu[12] = {0};
-    char sendbuff[1024] = "hello!this is sim5360";
+    char sendbuff[1024] = {0};
     struct termios old_term;
     comport *comport_info = NULL;
     comport_info = initComport();
@@ -30,7 +30,8 @@ int main(void)
 
     printf("please enter the message content:\n");
     //scanf("%s",sendbuff) ;
-    //fgets(sendbuff,sizeof(sendbuff),stdin);
+    fgets(sendbuff,sizeof(sendbuff),stdin);
+
     if(openComport(comport_info,&old_term) < 0)
     {
         return -1;
@@ -42,9 +43,11 @@ int main(void)
     
     sendenglish(comport_info->com_fd,rec_nu,sendbuff);
 
-    read_unreadmsg_txt(comport_info->com_fd);
+    list_msg_txt(comport_info->com_fd,TYPE_ALL);
 
     wait_newmsg_txt(comport_info->com_fd,10);
+
+    Comport_term(comport_info);
 
     return 0;
 }

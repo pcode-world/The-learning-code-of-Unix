@@ -21,8 +21,16 @@
 
 enum
 {
+    /* pattern */
     AT_SEARCH = 0,
     AT_SEEK,
+
+    /* message type */
+    TYPE_REC_UNREAD,//Received but not read
+    TYPE_REC_READ,//Received and read
+    TYPE_STO_UNSENT,//Saved but not sent
+    TYPE_STO_SENT,//Saved and sent
+    TYPE_ALL,//all
 };
 
 char *seek_AT_str(char *spe_str,char *exp_str,int pattern);
@@ -45,6 +53,6 @@ void del_msg(int comport_fd,int index);
 
 int wait_newmsg_txt(int comport_fd,int waittimes);
 
-int read_unreadmsg_txt(int comport_fd);
+int list_msg_txt(int comport_fd,int type);
 
 #endif
