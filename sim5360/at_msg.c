@@ -79,14 +79,14 @@ void AT_test(int comport_fd,char *AT_command,char *readbuff,int readbuffsize,int
 {
     int i = 0;
 
-    int ret = -1;
     while(1)
     {
+        int ret = -1;
         try_times(&i,10);
         //printf("+++++Execute the AT command once +++++\n");
         
 #if _DEBUG
-        printf("excute : %s,length = %d\n",AT_command,strlen(AT_command));
+        printf("excute : %s,length = %lu\n",AT_command,strlen(AT_command));
 #endif
         while(writeComport(comport_fd,AT_command,strlen(AT_command)) < 0)
         {
@@ -98,8 +98,8 @@ void AT_test(int comport_fd,char *AT_command,char *readbuff,int readbuffsize,int
         if((ret = readComport(comport_fd,readbuff,readbuffsize)) < 3)
         {
             sleep(sleeptime);
-            continue;
             try_times(&i,10);
+            continue;
         }
 
         if(seek_AT_str(readbuff,"ERROR",AT_SEARCH) != NULL)            
@@ -114,7 +114,7 @@ void AT_test(int comport_fd,char *AT_command,char *readbuff,int readbuffsize,int
 
 
 #if _DEBUG
-        printf("command retbuff = %s,length = %d\n",readbuff,strlen(readbuff));
+        printf("command retbuff = %s,length = %lu\n",readbuff,strlen(readbuff));
             int f = strlen(readbuff);
             for(f;f != 0;f--)
             {
@@ -231,8 +231,8 @@ int sendenglish(int comport_fd,unsigned char *telnu,char *msg)
 
     if(msg == NULL)
     {
-        return -1;
         printf("The message content cannot be empty\n");
+        return -1;
     }
     
     while(((*telnu) < ':') && ((*telnu) > '/'))

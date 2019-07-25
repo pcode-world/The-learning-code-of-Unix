@@ -364,7 +364,6 @@ int closeComport(comport *pcomport,struct termios *old_term)
     pcomport->isopen = 0;
 	close(pcomport->com_fd);
     free(pcomport);
-    pcomport = NULL;
     return 0;
 }
 
