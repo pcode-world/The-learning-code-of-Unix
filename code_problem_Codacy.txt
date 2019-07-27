@@ -1,0 +1,5 @@
+1.循环使用read应检查缓冲区边界
+
+2.strncpy,strcpy,strcat,strncat,strlen处理字符串都以\0会带来安全问题，可以用snprintf和memcpy代替
+
+3.usleep此函数与SIGALRM和其他计时器函数（如sleep（），alarm（），setitimer（）和nanosleep（））的交互未指定（CWE-676）。请改用nanosleep（2）或setitimer（2）。
