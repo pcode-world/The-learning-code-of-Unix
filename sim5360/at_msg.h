@@ -13,7 +13,7 @@
 
 #ifndef _AT_MSG_H
 #define _AT_MSG_H
-#define _DEBUG 1
+#define _DEBUG 0
 
 #include <string.h>
 #include <stdio.h>
