@@ -178,7 +178,14 @@ int main ()
 
   return 0;
 }
+/*结果*/
 
+/* ffffffe4 ffffffbd ffffffa0 ffffffe5 ffffffa5 ffffffbd 6c 69 6e 75 78
+ * ffffffff fffffffe 60 4f 7d 59 6c 0 69 0 6e 0 75 0 78 0*/
 /* 总结：
  * 存储以utf-8存储,变长编码,兼容assci码
- * Unicode编码,两个字节表示一个符号*/
+ * Unicode编码,两个字节表示一个符号
+ * 你---->UTF-8编码：E4BDA0
+ *   ---->Unicode编码：4f60
+ *
+ * 前面的ffffff代表啥呢?*/

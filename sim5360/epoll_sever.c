@@ -1,6 +1,6 @@
 #include "epoll_sever.h"
 
-int g_cilentstop = 0;
+static int g_serverstop = 0;
 
 void printfhelp(void)
 {
@@ -8,22 +8,17 @@ void printfhelp(void)
     printf("-h,ask for help\n");
 }
 
-void sig_usr(int signum)
+void sig_sigstp(int signum)
 {
     if(SIGTSTP == signum)
     {
-        g_cilentstop=1;
+        g_serverstop=1;
     }
 
-    if(SIGINT == signum)
-    {
-        g_cilentstop=1;
-    }
 }
 
 int epoll_server_start(int LISTENPORT)
 {
-    int ret;
     int listen_fd,epfd;
     struct sockaddr_in serveraddr;
     int new_fd=-1;
@@ -38,7 +33,7 @@ int epoll_server_start(int LISTENPORT)
     serveraddr.sin_addr.s_addr=INADDR_ANY;
     bzero(&(serveraddr.sin_zero), 8);
 
-    signal(SIGTSTP, sig_usr);
+    signal(SIGTSTP, sig_sigstp);
 
     listen_fd = socket(AF_INET,SOCK_STREAM,0);
 
@@ -86,7 +81,7 @@ int epoll_server_start(int LISTENPORT)
     //int epoll_ctl(int epfd, int op, int fd, struct epoll_event *ev)
     //int epoll_wait(int epfd, struct epoll_event *evlist, int maxevents, int timeout);
     //evlist检测到事件，将所有就绪的事件从内核事件表中复制到它的第二个参数指向的数组中。
-    while(!g_cilentstop)
+    while(!g_serverstop)
     {
         int i = 0;
         printf("Waitting for client connection,ctr+c to quik...\n");
@@ -102,7 +97,7 @@ int epoll_server_start(int LISTENPORT)
             printf("epoll wait timeout\n");
         }
 
-        for(i;i<epnu;i++)
+        for(i=0;i<epnu;i++)
         {
             /***evlist中的fd出错***/
             if((evlist[i].events & EPOLLERR) || (evlist[i].events & POLLHUP))

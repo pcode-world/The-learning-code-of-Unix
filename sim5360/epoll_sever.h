@@ -33,7 +33,7 @@
 
 void printfhelp(void);
 
-void sig_usr(int signum);
+void sig_sigstp(int signum);
 
 int epoll_server_start(int LISTENPORT);
 

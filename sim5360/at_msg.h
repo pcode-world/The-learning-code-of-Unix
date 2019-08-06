@@ -41,7 +41,7 @@ void AT_test(int comport_fd,char *AT_command,char *readbuff,int readbuffsize,int
 
 int judge_modulestate(int comport_fd);
 
-int sendenglish(int comport_fd,unsigned char *telnu,char *msg);
+int sendenglish(int comport_fd,const char *telnu,const char *msg);
 
 int sendchinese(int comport_fd,char *sendbuff,int sendbuffsize);
 

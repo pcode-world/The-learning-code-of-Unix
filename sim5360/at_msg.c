@@ -212,7 +212,7 @@ int judge_modulestate(int comport_fd)
  * Output Args:none
  * Return Value:success 0,error -1
  ******************************************************************************************************/
-int sendenglish(int comport_fd,unsigned char *telnu,char *msg)
+int sendenglish(int comport_fd,const char *telnu,const char *msg)
 {
     int waittimes = 0;
     char retbuff[32] = {0};
@@ -220,7 +220,7 @@ int sendenglish(int comport_fd,unsigned char *telnu,char *msg)
     char AT_choose[32] = "AT+CMGS=\"";
     char writebuff[1024];
     char *pfind = NULL;
-    unsigned char tel[16] = {0};
+    char tel[16] = {0};
     int i = 0;
 
     if(strlen(telnu) > sizeof(tel))
